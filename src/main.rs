@@ -1,13 +1,13 @@
 use std::env;
 use std::path::PathBuf;
-use gix::{discover, Repository};
+use gix::{open, Repository};
 
 fn main() {
     println!("Hello, world!");
     let path = env::current_dir();
     let git_dir : PathBuf = path.unwrap().to_path_buf();
     println!("Current dir = {}", git_dir.display());
-    let repo : Repository = discover(".").expect("Nope");
+    let repo : Repository = open(".").expect("Nope");
     let branch_names = repo.branch_names();
     let number_of_branches = branch_names.len();
     for branch in branch_names
