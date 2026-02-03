@@ -14,7 +14,7 @@ fn main() {
     let repository = open(git_dir).expect("Blabla");
     let gix_adapter = GixAdapter { repo: repository };
     let git_sweeper = GitSweeper {
-        adapter: gix_adapter,
+        adapter: Box::new(gix_adapter),
     };
 
     print!("{}", git_sweeper.print_branches());
