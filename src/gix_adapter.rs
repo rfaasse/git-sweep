@@ -1,5 +1,4 @@
-use gix::{Repository, open};
-use std::path::PathBuf;
+use gix::Repository;
 
 pub trait Adapter {
     fn branch_names(&self) -> Vec<String>;
