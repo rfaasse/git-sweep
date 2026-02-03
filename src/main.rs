@@ -11,7 +11,7 @@ fn main() {
 
     let git_dir: PathBuf = path.unwrap().to_path_buf();
     println!("Current dir = {}", git_dir.display());
-    let repository = open(git_dir).expect("Blabla");
+    let repository = open(git_dir).expect("Could not initialize git repository");
     let gix_adapter = GixAdapter { repo: repository };
     let git_sweeper = GitSweeper {
         adapter: Box::new(gix_adapter),
