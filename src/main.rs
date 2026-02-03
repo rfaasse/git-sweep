@@ -1,21 +1,14 @@
 mod git_sweeper;
 mod gix_adapter;
-use crate::git_sweeper::GitSweeper;
+use crate::git_sweeper::print_branches;
 use crate::gix_adapter::GixAdapter;
 use gix::open;
 use std::env;
-use std::path::PathBuf;
 
 fn main() {
-    let path = env::current_dir();
-
-    let git_dir: PathBuf = path.unwrap().to_path_buf();
-    println!("Current dir = {}", git_dir.display());
-    let repository = open(git_dir).expect("Could not initialize git repository");
+    let path = env::current_dir().expect("Could not open current path");
+    let repository = open(path).expect("Could not initialize git repository");
     let gix_adapter = GixAdapter { repo: repository };
-    let git_sweeper = GitSweeper {
-        adapter: Box::new(gix_adapter),
-    };
 
-    print!("{}", git_sweeper.print_branches());
+    print!("{}", print_branches(&gix_adapter));
 }
