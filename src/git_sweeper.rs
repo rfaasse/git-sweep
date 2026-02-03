@@ -2,18 +2,15 @@ use crate::branch_deletion_structure::BranchDeletionStructure;
 use crate::gix_adapter::Adapter;
 pub(crate) fn create_branch_structure(adapter: &dyn Adapter) -> Vec<BranchDeletionStructure> {
     let branch_names = adapter.branch_names();
-    let mut branches: Vec<BranchDeletionStructure> = Vec::new();
-    let mut index = 1;
-    for branch_name in branch_names {
-        branches.push(BranchDeletionStructure {
-            index,
+    branch_names
+        .into_iter()
+        .enumerate()
+        .map(|(i, branch_name)| BranchDeletionStructure {
+            index: i + 1,
             branch_name,
             should_be_deleted: false,
-        });
-        index += 1;
-    }
-
-    branches
+        })
+        .collect()
 }
 
 pub(crate) fn print_branch_structure(branch_structure: &Vec<BranchDeletionStructure>) -> String {
