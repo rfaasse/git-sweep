@@ -1,18 +1,21 @@
+mod git_sweeper;
+mod gix_adapter;
+use crate::git_sweeper::GitSweeper;
+use crate::gix_adapter::GixAdapter;
+use gix::open;
 use std::env;
 use std::path::PathBuf;
-use gix::{open, Repository};
 
 fn main() {
-    println!("Hello, world!");
     let path = env::current_dir();
-    let git_dir : PathBuf = path.unwrap().to_path_buf();
+
+    let git_dir: PathBuf = path.unwrap().to_path_buf();
     println!("Current dir = {}", git_dir.display());
-    let repo : Repository = open(".").expect("Nope");
-    let branch_names = repo.branch_names();
-    let number_of_branches = branch_names.len();
-    for branch in branch_names
-    {
-        println!("branch {branch}");
-    }
-    println!("Number of branches = {number_of_branches}");
+    let repository = open(git_dir).expect("Blabla");
+    let gix_adapter = GixAdapter { repo: repository };
+    let git_sweeper = GitSweeper {
+        adapter: gix_adapter,
+    };
+
+    print!("{}", git_sweeper.print_branches());
 }
