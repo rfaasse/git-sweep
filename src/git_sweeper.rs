@@ -13,7 +13,7 @@ pub(crate) fn create_branch_structure(adapter: &dyn Adapter) -> Vec<BranchDeleti
         .collect()
 }
 
-pub(crate) fn print_branch_structure(branch_structure: &Vec<BranchDeletionStructure>) -> String {
+pub(crate) fn print_branch_structure(branch_structure: &[BranchDeletionStructure]) -> String {
     branch_structure
         .iter()
         .map(|branch| {

@@ -1,6 +1,6 @@
+mod branch_deletion_structure;
 mod git_sweeper;
 mod gix_adapter;
-mod branch_deletion_structure;
 
 use crate::git_sweeper::{create_branch_structure, print_branch_structure};
 use crate::gix_adapter::GixAdapter;
