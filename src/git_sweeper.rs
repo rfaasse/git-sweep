@@ -27,6 +27,19 @@ pub(crate) fn print_branch_structure(branch_structure: &[BranchDeletionStructure
         .collect()
 }
 
+pub(crate) fn toggle_branch_deletion_status(
+    branch_structure: &[BranchDeletionStructure],
+    index: usize,
+) -> Vec<BranchDeletionStructure> {
+    let mut result = branch_structure.to_vec();
+
+    if let Some(branch) = result.iter_mut().find(|b| b.index == index) {
+        branch.should_be_deleted = !branch.should_be_deleted;
+    }
+
+    result
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -82,5 +95,25 @@ mod tests {
         let expected_output_string = "[ ] 1. branch_1\n[x] 2. branch_2\n";
 
         assert_eq!(expected_output_string, print_branch_structure(&input));
+    }
+
+    #[test]
+    fn test_toggle_branch_deletion_status() {
+        let input = vec![
+            BranchDeletionStructure {
+                index: 1,
+                branch_name: "branch_1".to_string(),
+                should_be_deleted: false,
+            },
+            BranchDeletionStructure {
+                index: 2,
+                branch_name: "branch_2".to_string(),
+                should_be_deleted: true,
+            },
+        ];
+
+        let output = toggle_branch_deletion_status(&input, 2);
+
+        assert_eq!(output[1].should_be_deleted, false);
     }
 }

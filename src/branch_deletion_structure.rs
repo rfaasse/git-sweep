@@ -1,4 +1,4 @@
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone)]
 pub struct BranchDeletionStructure {
     pub(crate) index: usize,
     pub(crate) branch_name: String,
