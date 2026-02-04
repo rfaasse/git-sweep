@@ -28,7 +28,9 @@ fn main() {
             .read_line(&mut index)
             .expect("Failed to read line");
 
-        if index.trim().is_empty() {break;}
+        if index.trim().is_empty() {
+            break;
+        }
         let index: usize = index.trim().parse().expect("Please type a number!");
         toggle_branch_deletion_status(&mut branch_structure, index);
         print!("{esc}[2J{esc}[1;1H", esc = 27 as char);

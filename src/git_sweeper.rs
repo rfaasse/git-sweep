@@ -28,9 +28,9 @@ pub(crate) fn print_branch_structure(branch_structure: &[BranchDeletionStructure
 }
 
 pub(crate) fn toggle_branch_deletion_status(
-    branch_structure: & mut[BranchDeletionStructure],
+    branch_structure: &mut [BranchDeletionStructure],
     index: usize,
-)  {
+) {
     if let Some(branch) = branch_structure.iter_mut().find(|b| b.index == index) {
         branch.should_be_deleted = !branch.should_be_deleted;
     }
