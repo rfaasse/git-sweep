@@ -1,18 +1,25 @@
+mod branch_deletion_structure;
+mod git_sweeper;
+mod gix_adapter;
+mod user_io;
+
+use crate::git_sweeper::create_branch_structure;
+use crate::gix_adapter::GixAdapter;
+use crate::user_io::get_user_defined_branch_deletion_options;
+use gix::open;
 use std::env;
-use std::path::PathBuf;
-use gix::{open, Repository};
 
 fn main() {
-    println!("Hello, world!");
-    let path = env::current_dir();
-    let git_dir : PathBuf = path.unwrap().to_path_buf();
-    println!("Current dir = {}", git_dir.display());
-    let repo : Repository = open(".").expect("Nope");
-    let branch_names = repo.branch_names();
-    let number_of_branches = branch_names.len();
-    for branch in branch_names
-    {
-        println!("branch {branch}");
+    let path = env::current_dir().expect("Could not open current path");
+    let repository = open(path).expect("Could not initialize git repository");
+    let gix_adapter = GixAdapter { repo: repository };
+
+    let mut branch_structure = create_branch_structure(&gix_adapter);
+
+    get_user_defined_branch_deletion_options(&mut branch_structure);
+
+    for branch in branch_structure.iter().filter(|b| b.should_be_deleted) {
+        gix_adapter.delete_branch(&branch.branch_name);
+        println!("Deleted branch: {}", branch.branch_name);
     }
-    println!("Number of branches = {number_of_branches}");
 }
