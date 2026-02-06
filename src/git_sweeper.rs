@@ -13,20 +13,6 @@ pub(crate) fn create_branch_structure(adapter: &dyn Adapter) -> Vec<BranchDeleti
         .collect()
 }
 
-pub(crate) fn print_branch_structure(branch_structure: &[BranchDeletionStructure]) -> String {
-    branch_structure
-        .iter()
-        .map(|branch| {
-            format!(
-                "[{}] {}. {}\n",
-                if branch.should_be_deleted { "x" } else { " " },
-                branch.index,
-                branch.branch_name
-            )
-        })
-        .collect()
-}
-
 pub(crate) fn toggle_branch_deletion_status(
     branch_structure: &mut [BranchDeletionStructure],
     index: usize,
@@ -74,26 +60,6 @@ mod tests {
     }
 
     #[test]
-    fn test_print_branch_structure() {
-        let input = vec![
-            BranchDeletionStructure {
-                index: 1,
-                branch_name: "branch_1".to_string(),
-                should_be_deleted: false,
-            },
-            BranchDeletionStructure {
-                index: 2,
-                branch_name: "branch_2".to_string(),
-                should_be_deleted: true,
-            },
-        ];
-
-        let expected_output_string = "[ ] 1. branch_1\n[x] 2. branch_2\n";
-
-        assert_eq!(expected_output_string, print_branch_structure(&input));
-    }
-
-    #[test]
     fn test_toggle_branch_deletion_status() {
         let mut input = vec![
             BranchDeletionStructure {
@@ -108,7 +74,7 @@ mod tests {
             },
         ];
 
-        let output = toggle_branch_deletion_status(&mut input, 2);
+        toggle_branch_deletion_status(&mut input, 2);
 
         assert_eq!(input[1].should_be_deleted, false);
     }
