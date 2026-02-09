@@ -54,11 +54,13 @@ mod tests {
                 index: 1,
                 branch_name: "branch_1".to_string(),
                 should_be_deleted: false,
+                is_checked_out: false,
             },
             BranchDeletionStructure {
                 index: 2,
                 branch_name: "branch_2".to_string(),
                 should_be_deleted: true,
+                is_checked_out: false,
             },
         ];
 

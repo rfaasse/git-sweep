@@ -9,6 +9,7 @@ pub(crate) fn create_branch_structure(adapter: &dyn Adapter) -> Vec<BranchDeleti
             index: i + 1,
             branch_name,
             should_be_deleted: false,
+            is_checked_out: false,
         })
         .collect()
 }
@@ -43,11 +44,13 @@ mod tests {
             index: 1,
             branch_name: "branch_1".to_string(),
             should_be_deleted: false,
+            is_checked_out: false,
         });
         expected_branch_structure.push(BranchDeletionStructure {
             index: 2,
             branch_name: "branch_2".to_string(),
             should_be_deleted: false,
+            is_checked_out: false,
         });
 
         let actual_branch_structure = create_branch_structure(&mock_adapter);
@@ -66,11 +69,13 @@ mod tests {
                 index: 1,
                 branch_name: "branch_1".to_string(),
                 should_be_deleted: false,
+                is_checked_out: false,
             },
             BranchDeletionStructure {
                 index: 2,
                 branch_name: "branch_2".to_string(),
                 should_be_deleted: true,
+                is_checked_out: false,
             },
         ];
 
