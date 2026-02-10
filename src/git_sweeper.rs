@@ -19,6 +19,9 @@ pub(crate) fn toggle_branch_deletion_status(
     index: usize,
 ) {
     if let Some(branch) = branch_structure.iter_mut().find(|b| b.index == index) {
+        if branch.is_checked_out {
+            return;
+        }
         branch.should_be_deleted = !branch.should_be_deleted;
     }
 }
@@ -84,6 +87,21 @@ mod tests {
 
         toggle_branch_deletion_status(&mut input, 2);
 
+        assert_eq!(input[0].should_be_deleted, false);
         assert_eq!(input[1].should_be_deleted, false);
+    }
+
+    #[test]
+    fn test_toggle_branch_deletion_status_when_branch_is_checked_out_should_not_change_state() {
+        let mut input = vec![BranchDeletionStructure {
+            index: 1,
+            branch_name: "branch_1".to_string(),
+            should_be_deleted: false,
+            is_checked_out: true,
+        }];
+
+        toggle_branch_deletion_status(&mut input, 1);
+
+        assert_eq!(input[0].should_be_deleted, false);
     }
 }

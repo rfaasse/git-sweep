@@ -1,4 +1,4 @@
-use gix::{open, Reference, Repository};
+use gix::{Reference, Repository, open};
 
 pub trait Adapter {
     fn branch_names(&self) -> Vec<String>;
@@ -28,7 +28,7 @@ impl Adapter for GixAdapter {
             return true;
         }
 
-        for work_tree in self.repo.worktrees().unwrap(){
+        for work_tree in self.repo.worktrees().unwrap() {
             let repo = open(work_tree.git_dir()).unwrap();
             let head = repo.head().expect("Could not get HEAD reference");
             if head.is_detached() {
