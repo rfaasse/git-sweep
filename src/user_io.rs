@@ -31,10 +31,15 @@ fn print_branch_structure(branch_structure: &[BranchDeletionStructure]) -> Strin
         .iter()
         .map(|branch| {
             format!(
-                "[{}] {}. {}\n",
+                "[{}] {}. {} {}\n",
                 if branch.should_be_deleted { "x" } else { " " },
                 branch.index,
-                branch.branch_name
+                branch.branch_name,
+                if branch.is_checked_out {
+                    "(checked out)"
+                } else {
+                    ""
+                }
             )
         })
         .collect()

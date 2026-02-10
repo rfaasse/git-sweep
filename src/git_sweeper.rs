@@ -7,9 +7,9 @@ pub(crate) fn create_branch_structure(adapter: &dyn Adapter) -> Vec<BranchDeleti
         .enumerate()
         .map(|(i, branch_name)| BranchDeletionStructure {
             index: i + 1,
+            is_checked_out: adapter.is_checked_out(&branch_name),
             branch_name,
             should_be_deleted: false,
-            is_checked_out: false,
         })
         .collect()
 }
@@ -32,6 +32,9 @@ mod tests {
     impl Adapter for MockGixAdapter {
         fn branch_names(&self) -> Vec<String> {
             Vec::from(["branch_1".to_string(), "branch_2".to_string()])
+        }
+        fn is_checked_out(&self, _branch_name: &str) -> bool {
+            false
         }
     }
 

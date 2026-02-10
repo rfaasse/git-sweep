@@ -2,6 +2,7 @@ use gix::{Reference, Repository};
 
 pub trait Adapter {
     fn branch_names(&self) -> Vec<String>;
+    fn is_checked_out(&self, branch_name: &str) -> bool;
 }
 
 pub struct GixAdapter {
@@ -18,6 +19,18 @@ impl Adapter for GixAdapter {
             .filter_map(Result::ok) // ignore errors
             .map(|reference: Reference| reference.name().shorten().to_string()) // extract just the names
             .collect()
+    }
+
+    fn is_checked_out(&self, branch_name: &str) -> bool {
+        let head = self.repo.head().expect("Could not get HEAD reference");
+        if head.is_detached() {
+            return false;
+        }
+        let branch_refname = format!("refs/heads/{branch_name}");
+        if head.referent_name().unwrap().to_string() == branch_refname {
+            return true;
+        }
+        false
     }
 }
 
