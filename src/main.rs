@@ -15,7 +15,6 @@ fn main() {
     let gix_adapter = GixAdapter { repo: repository };
 
     let mut branch_structure = create_branch_structure(&gix_adapter);
-
     get_user_defined_branch_deletion_options(&mut branch_structure);
 
     for branch in branch_structure.iter().filter(|b| b.should_be_deleted) {
