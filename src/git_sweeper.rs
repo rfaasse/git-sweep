@@ -8,7 +8,7 @@ pub(crate) fn create_branch_structure(adapter: &dyn Adapter) -> Vec<BranchDeleti
         .map(|(i, branch_name)| BranchDeletionStructure {
             index: i + 1,
             is_checked_out: adapter.is_checked_out(&branch_name),
-            branch_name,
+            name: branch_name,
             should_be_deleted: false,
         })
         .collect()
@@ -21,8 +21,8 @@ pub(crate) fn toggle_branch_deletion_status(
     if let Some(branch) = branch_structure
         .iter_mut()
         .find(|b| b.index == index)
-        .filter(|b| b.branch_name != "main")
-        .filter(|b| b.branch_name != "master")
+        .filter(|b| b.name != "main")
+        .filter(|b| b.name != "master")
         .filter(|b| !b.is_checked_out)
     {
         branch.should_be_deleted = !branch.should_be_deleted;
@@ -51,13 +51,13 @@ mod tests {
         let mut expected_branch_structure: Vec<BranchDeletionStructure> = Vec::new();
         expected_branch_structure.push(BranchDeletionStructure {
             index: 1,
-            branch_name: "branch_1".to_string(),
+            name: "branch_1".to_string(),
             should_be_deleted: false,
             is_checked_out: false,
         });
         expected_branch_structure.push(BranchDeletionStructure {
             index: 2,
-            branch_name: "branch_2".to_string(),
+            name: "branch_2".to_string(),
             should_be_deleted: false,
             is_checked_out: false,
         });
@@ -76,13 +76,13 @@ mod tests {
         let mut input = vec![
             BranchDeletionStructure {
                 index: 1,
-                branch_name: "branch_1".to_string(),
+                name: "branch_1".to_string(),
                 should_be_deleted: false,
                 is_checked_out: false,
             },
             BranchDeletionStructure {
                 index: 2,
-                branch_name: "branch_2".to_string(),
+                name: "branch_2".to_string(),
                 should_be_deleted: true,
                 is_checked_out: false,
             },
@@ -98,7 +98,7 @@ mod tests {
     fn test_toggle_branch_deletion_status_when_branch_is_checked_out_should_not_change_state() {
         let mut input = vec![BranchDeletionStructure {
             index: 1,
-            branch_name: "branch_1".to_string(),
+            name: "branch_1".to_string(),
             should_be_deleted: false,
             is_checked_out: true,
         }];
@@ -112,7 +112,7 @@ mod tests {
     fn test_toggle_branch_deletion_status_when_branch_is_main_should_not_change_state() {
         let mut input = vec![BranchDeletionStructure {
             index: 1,
-            branch_name: "main".to_string(),
+            name: "main".to_string(),
             should_be_deleted: false,
             is_checked_out: false,
         }];
@@ -126,7 +126,7 @@ mod tests {
     fn test_toggle_branch_deletion_status_when_branch_is_master_should_not_change_state() {
         let mut input = vec![BranchDeletionStructure {
             index: 1,
-            branch_name: "master".to_string(),
+            name: "master".to_string(),
             should_be_deleted: false,
             is_checked_out: false,
         }];
