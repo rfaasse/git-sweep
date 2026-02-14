@@ -94,14 +94,23 @@ mod tests {
         assert_eq!(input[1].should_be_deleted, false);
     }
 
+    fn create_branch_deletion_structure(
+        name: &str,
+        is_checked_out: bool,
+    ) -> Vec<BranchDeletionStructure> {
+        vec![BranchDeletionStructure {
+            index: 1,
+            name: name.to_string(),
+            should_be_deleted: false,
+            is_checked_out,
+        }]
+    }
+
     #[test]
     fn test_toggle_branch_deletion_status_when_branch_is_checked_out_should_not_change_state() {
-        let mut input = vec![BranchDeletionStructure {
-            index: 1,
-            name: "branch_1".to_string(),
-            should_be_deleted: false,
-            is_checked_out: true,
-        }];
+        let name = "branch_1";
+        let is_checked_out = true;
+        let mut input = create_branch_deletion_structure(name, is_checked_out);
 
         toggle_branch_deletion_status(&mut input, 1);
 
@@ -110,12 +119,9 @@ mod tests {
 
     #[test]
     fn test_toggle_branch_deletion_status_when_branch_is_main_should_not_change_state() {
-        let mut input = vec![BranchDeletionStructure {
-            index: 1,
-            name: "main".to_string(),
-            should_be_deleted: false,
-            is_checked_out: false,
-        }];
+        let name = "main";
+        let is_checked_out = false;
+        let mut input = create_branch_deletion_structure(name, is_checked_out);
 
         toggle_branch_deletion_status(&mut input, 1);
 
@@ -124,12 +130,9 @@ mod tests {
 
     #[test]
     fn test_toggle_branch_deletion_status_when_branch_is_master_should_not_change_state() {
-        let mut input = vec![BranchDeletionStructure {
-            index: 1,
-            name: "master".to_string(),
-            should_be_deleted: false,
-            is_checked_out: false,
-        }];
+        let name = "master";
+        let is_checked_out = false;
+        let mut input = create_branch_deletion_structure(name, is_checked_out);
 
         toggle_branch_deletion_status(&mut input, 1);
 
