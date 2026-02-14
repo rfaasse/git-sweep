@@ -5,10 +5,10 @@ pub(crate) fn create_branch_structure(adapter: &dyn Adapter) -> Vec<BranchDeleti
     branch_names
         .into_iter()
         .enumerate()
-        .map(|(i, branch_name)| BranchDeletionStructure {
+        .map(|(i, name)| BranchDeletionStructure {
             index: i + 1,
-            is_checked_out: adapter.is_checked_out(&branch_name),
-            name: branch_name,
+            is_checked_out: adapter.is_checked_out(&name),
+            name,
             should_be_deleted: false,
         })
         .collect()

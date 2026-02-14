@@ -22,24 +22,8 @@ impl Adapter for GixAdapter {
     }
 
     fn is_checked_out(&self, branch_name: &str) -> bool {
-        let head = self.repo.head().expect("Could not get HEAD reference");
-        let branch_refname = format!("refs/heads/{branch_name}");
-        if head.referent_name().unwrap().to_string() == branch_refname {
-            return true;
-        }
-
-        for work_tree in self.repo.worktrees().unwrap() {
-            let repo = open(work_tree.git_dir()).unwrap();
-            let head = repo.head().expect("Could not get HEAD reference");
-            if head.is_detached() {
-                continue;
-            }
-            let branch_refname = format!("refs/heads/{branch_name}");
-            if head.referent_name().unwrap().to_string() == branch_refname {
-                return true;
-            }
-        }
-        false
+        Self::repo_head_is_at_branch(branch_name, &self.repo)
+            || self.branch_is_checked_out_by_worktree(branch_name)
     }
 }
 
@@ -52,5 +36,24 @@ impl GixAdapter {
             .find_reference(&refname)
             .expect("Could not find reference for branch");
         reference.delete().expect("Could not remove branch"); // deletes the branch
+    }
+
+    fn repo_head_is_at_branch(branch_name: &str, repo: &Repository) -> bool {
+        let head = repo.head().expect("Could not get HEAD reference");
+        if head.is_detached() {
+            return false;
+        }
+        let branch_refname = format!("refs/heads/{branch_name}");
+        head.referent_name().unwrap().to_string() == branch_refname
+    }
+
+    fn branch_is_checked_out_by_worktree(&self, branch_name: &str) -> bool {
+        for work_tree in self.repo.worktrees().unwrap() {
+            let repo = open(work_tree.git_dir()).unwrap();
+            if Self::repo_head_is_at_branch(branch_name, &repo) {
+                return true;
+            }
+        }
+        false
     }
 }
