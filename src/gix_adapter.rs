@@ -1,4 +1,5 @@
 use gix::{Reference, Repository, open};
+use gix::worktree::Proxy;
 
 pub trait Adapter {
     fn branch_names(&self) -> Vec<String>;
@@ -48,12 +49,14 @@ impl GixAdapter {
     }
 
     fn branch_is_checked_out_by_worktree(&self, branch_name: &str) -> bool {
-        for work_tree in self.repo.worktrees().unwrap() {
-            let repo = open(work_tree.git_dir()).unwrap();
-            if Self::repo_head_is_at_branch(branch_name, &repo) {
-                return true;
-            }
-        }
-        false
+        self.repo
+            .worktrees()
+            .unwrap()
+            .into_iter()
+            .any(|worktree : Proxy| {
+                open(worktree.git_dir())
+                    .map(|repo| Self::repo_head_is_at_branch(branch_name, &repo))
+                    .unwrap()
+            })
     }
 }
