@@ -31,12 +31,20 @@ fn print_branch_structure(branch_structure: &[BranchDeletionStructure]) -> Strin
         .iter()
         .map(|branch| {
             format!(
-                "[{}] {}. {}{}\n",
+                "[{}] {}. {}{}{}\n",
                 if branch.should_be_deleted { "x" } else { " " },
                 branch.index,
                 branch.branch_name,
                 if branch.is_checked_out {
                     " (checked out)"
+                } else {
+                    ""
+                },
+                if branch.branch_name == "main"
+                    || branch.branch_name == "master"
+                    || branch.is_checked_out
+                {
+                    " [can't be deleted]"
                 } else {
                     ""
                 }
@@ -69,7 +77,7 @@ mod tests {
             },
         ];
 
-        let expected_output_string = "[ ] 1. branch_1\n[x] 2. branch_2 (checked out)\n";
+        let expected_output_string = "[ ] 1. branch_1\n[x] 2. branch_2 (checked out) [can't be deleted]\n";
 
         assert_eq!(expected_output_string, print_branch_structure(&input));
     }
