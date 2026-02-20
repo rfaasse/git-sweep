@@ -1,11 +1,12 @@
-use crate::branch_deletion_structure::BranchDeletionStructure;
+use crate::branch_data::BranchData;
 use crate::gix_adapter::Adapter;
-pub(crate) fn create_branch_structure(adapter: &dyn Adapter) -> Vec<BranchDeletionStructure> {
+pub(crate) fn create_branch_structure(adapter: &dyn Adapter) -> Vec<BranchData> {
     let branch_names = adapter.branch_names();
     branch_names
         .into_iter()
+        .filter(|name| !adapter.is_checked_out(&name))
         .enumerate()
-        .map(|(i, name)| BranchDeletionStructure {
+        .map(|(i, name)| BranchData {
             index: i + 1,
             is_checked_out: adapter.is_checked_out(&name),
             name,
@@ -15,7 +16,7 @@ pub(crate) fn create_branch_structure(adapter: &dyn Adapter) -> Vec<BranchDeleti
 }
 
 pub(crate) fn toggle_branch_deletion_status(
-    branch_structure: &mut [BranchDeletionStructure],
+    branch_structure: &mut [BranchData],
     index: usize,
 ) {
     if let Some(branch) = branch_structure
@@ -48,14 +49,14 @@ mod tests {
     fn test_create_branch_structure() {
         let mock_adapter = MockGixAdapter {};
 
-        let mut expected_branch_structure: Vec<BranchDeletionStructure> = Vec::new();
-        expected_branch_structure.push(BranchDeletionStructure {
+        let mut expected_branch_structure: Vec<BranchData> = Vec::new();
+        expected_branch_structure.push(BranchData {
             index: 1,
             name: "branch_1".to_string(),
             should_be_deleted: false,
             is_checked_out: false,
         });
-        expected_branch_structure.push(BranchDeletionStructure {
+        expected_branch_structure.push(BranchData {
             index: 2,
             name: "branch_2".to_string(),
             should_be_deleted: false,
@@ -74,13 +75,13 @@ mod tests {
     #[test]
     fn test_toggle_branch_deletion_status() {
         let mut input = vec![
-            BranchDeletionStructure {
+            BranchData {
                 index: 1,
                 name: "branch_1".to_string(),
                 should_be_deleted: false,
                 is_checked_out: false,
             },
-            BranchDeletionStructure {
+            BranchData {
                 index: 2,
                 name: "branch_2".to_string(),
                 should_be_deleted: true,
@@ -97,8 +98,8 @@ mod tests {
     fn create_branch_deletion_structure(
         name: &str,
         is_checked_out: bool,
-    ) -> Vec<BranchDeletionStructure> {
-        vec![BranchDeletionStructure {
+    ) -> Vec<BranchData> {
+        vec![BranchData {
             index: 1,
             name: name.to_string(),
             should_be_deleted: false,

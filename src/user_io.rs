@@ -1,8 +1,8 @@
-use crate::branch_deletion_structure::BranchDeletionStructure;
+use crate::branch_data::BranchData;
 use crate::git_sweeper::toggle_branch_deletion_status;
 use std::io;
 
-pub fn get_user_defined_branch_deletion_options(branch_structure: &mut [BranchDeletionStructure]) {
+pub fn get_user_defined_branch_deletion_options(branch_structure: &mut [BranchData]) {
     clear_console();
 
     println!("These are the available branches:");
@@ -26,7 +26,7 @@ pub fn get_user_defined_branch_deletion_options(branch_structure: &mut [BranchDe
     }
 }
 
-fn print_branch_structure(branch_structure: &[BranchDeletionStructure]) -> String {
+fn print_branch_structure(branch_structure: &[BranchData]) -> String {
     branch_structure
         .iter()
         .map(|branch| {
@@ -60,13 +60,13 @@ mod tests {
     #[test]
     fn test_print_branch_structure() {
         let input = vec![
-            BranchDeletionStructure {
+            BranchData {
                 index: 1,
                 name: "branch_1".to_string(),
                 should_be_deleted: false,
                 is_checked_out: false,
             },
-            BranchDeletionStructure {
+            BranchData {
                 index: 2,
                 name: "branch_2".to_string(),
                 should_be_deleted: true,
