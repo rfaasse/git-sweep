@@ -5,8 +5,7 @@ use std::io;
 pub fn get_user_defined_branch_deletion_options(branch_structure: &mut [BranchData]) {
     clear_console();
 
-    println!("These are the available branches:");
-    print!("{}", print_branch_structure(branch_structure));
+    print_branch_structure_to_console(branch_structure);
     loop {
         println!("Type the index of the branch you want to toggle for deletion:");
         println!("(Press Enter without typing a number to finish selection)");
@@ -20,10 +19,15 @@ pub fn get_user_defined_branch_deletion_options(branch_structure: &mut [BranchDa
         }
         let index: usize = index.trim().parse().expect("Please type a number!");
         toggle_branch_deletion_status(branch_structure, index);
+
         clear_console();
-        println!("These are the available branches:");
-        print!("{}", print_branch_structure(branch_structure));
+        print_branch_structure_to_console(branch_structure);
     }
+}
+
+fn print_branch_structure_to_console(branch_structure: &mut [BranchData]) {
+    println!("These are the branches available for deletion:");
+    print!("{}", print_branch_structure(branch_structure));
 }
 
 fn print_branch_structure(branch_structure: &[BranchData]) -> String {
