@@ -5,6 +5,7 @@ pub(crate) fn create_branch_structure(adapter: &dyn Adapter) -> Vec<BranchData> 
     branch_names
         .into_iter()
         .filter(|name| !adapter.is_checked_out(&name))
+        .filter(|name| name != "main" && name != "master")
         .enumerate()
         .map(|(i, name)| BranchData {
             index: i + 1,
