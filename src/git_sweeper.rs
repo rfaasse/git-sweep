@@ -60,7 +60,10 @@ mod tests {
         });
 
         let actual_branch_structure = create_branch_structure(&mock_adapter);
-        assert_eq!(expected_branch_structure.len(), actual_branch_structure.len());
+        assert_eq!(
+            expected_branch_structure.len(),
+            actual_branch_structure.len()
+        );
         let matching = expected_branch_structure
             .iter()
             .zip(&actual_branch_structure)
