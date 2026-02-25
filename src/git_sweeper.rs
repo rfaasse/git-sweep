@@ -4,7 +4,7 @@ pub(crate) fn create_branch_structure(adapter: &dyn Adapter) -> Vec<BranchData> 
     let branch_names = adapter.branch_names();
     branch_names
         .into_iter()
-        .filter(|name| !adapter.is_checked_out(&name))
+        .filter(|name| !adapter.is_checked_out(name))
         .filter(|name| name != "main" && name != "master")
         .enumerate()
         .map(|(i, name)| BranchData {
@@ -15,8 +15,11 @@ pub(crate) fn create_branch_structure(adapter: &dyn Adapter) -> Vec<BranchData> 
         .collect()
 }
 
-pub(crate) fn toggle_branch_deletion_status(branch_structure: &mut [BranchData], index: usize) {
-    if let Some(branch) = branch_structure.iter_mut().find(|b| b.index == index) {
+pub(crate) fn toggle_branch_deletion_status_by_name(
+    branch_structure: &mut [BranchData],
+    name: &str,
+) {
+    if let Some(branch) = branch_structure.iter_mut().find(|b| b.name == name) {
         branch.should_be_deleted = !branch.should_be_deleted;
     }
 }
@@ -87,7 +90,7 @@ mod tests {
             },
         ];
 
-        toggle_branch_deletion_status(&mut input, 2);
+        toggle_branch_deletion_status_by_name(&mut input, "branch_2");
 
         assert_eq!(input[0].should_be_deleted, false);
         assert_eq!(input[1].should_be_deleted, false);
