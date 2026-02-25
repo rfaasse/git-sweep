@@ -1,5 +1,5 @@
-use gix::{Reference, Repository, open};
 use gix::worktree::Proxy;
+use gix::{Reference, Repository, open};
 
 pub trait Adapter {
     fn branch_names(&self) -> Vec<String>;
@@ -53,7 +53,7 @@ impl GixAdapter {
             .worktrees()
             .unwrap()
             .into_iter()
-            .any(|worktree : Proxy| {
+            .any(|worktree: Proxy| {
                 open(worktree.git_dir())
                     .map(|repo| Self::repo_head_is_at_branch(branch_name, &repo))
                     .unwrap()
