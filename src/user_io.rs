@@ -1,12 +1,11 @@
-use crate::branch_deletion_structure::BranchDeletionStructure;
+use crate::branch_data::BranchData;
 use crate::git_sweeper::toggle_branch_deletion_status;
 use std::io;
 
-pub fn get_user_defined_branch_deletion_options(branch_structure: &mut [BranchDeletionStructure]) {
+pub fn get_user_defined_branch_deletion_options(branch_structure: &mut [BranchData]) {
     clear_console();
 
-    println!("These are the available branches:");
-    print!("{}", print_branch_structure(branch_structure));
+    print_branch_structure_to_console(branch_structure);
     loop {
         println!("Type the index of the branch you want to toggle for deletion:");
         println!("(Press Enter without typing a number to finish selection)");
@@ -20,31 +19,26 @@ pub fn get_user_defined_branch_deletion_options(branch_structure: &mut [BranchDe
         }
         let index: usize = index.trim().parse().expect("Please type a number!");
         toggle_branch_deletion_status(branch_structure, index);
+
         clear_console();
-        println!("These are the branches scheduled for deletion:");
-        print!("{}", print_branch_structure(branch_structure));
+        print_branch_structure_to_console(branch_structure);
     }
 }
 
-fn print_branch_structure(branch_structure: &[BranchDeletionStructure]) -> String {
+fn print_branch_structure_to_console(branch_structure: &mut [BranchData]) {
+    println!("These are the branches available for deletion:");
+    print!("{}", print_branch_structure(branch_structure));
+}
+
+fn print_branch_structure(branch_structure: &[BranchData]) -> String {
     branch_structure
         .iter()
         .map(|branch| {
             format!(
-                "[{}] {}. {}{}{}\n",
+                "[{}] {}. {}\n",
                 if branch.should_be_deleted { "x" } else { " " },
                 branch.index,
                 branch.name,
-                if branch.is_checked_out {
-                    " (checked out)"
-                } else {
-                    ""
-                },
-                if branch.name == "main" || branch.name == "master" || branch.is_checked_out {
-                    " [can't be deleted]"
-                } else {
-                    ""
-                }
             )
         })
         .collect()
@@ -60,22 +54,19 @@ mod tests {
     #[test]
     fn test_print_branch_structure() {
         let input = vec![
-            BranchDeletionStructure {
+            BranchData {
                 index: 1,
                 name: "branch_1".to_string(),
                 should_be_deleted: false,
-                is_checked_out: false,
             },
-            BranchDeletionStructure {
+            BranchData {
                 index: 2,
                 name: "branch_2".to_string(),
                 should_be_deleted: true,
-                is_checked_out: true,
             },
         ];
 
-        let expected_output_string =
-            "[ ] 1. branch_1\n[x] 2. branch_2 (checked out) [can't be deleted]\n";
+        let expected_output_string = "[ ] 1. branch_1\n[x] 2. branch_2\n";
 
         assert_eq!(expected_output_string, print_branch_structure(&input));
     }

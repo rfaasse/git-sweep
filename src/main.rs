@@ -1,4 +1,4 @@
-mod branch_deletion_structure;
+mod branch_data;
 mod git_sweeper;
 mod gix_adapter;
 mod user_io;
