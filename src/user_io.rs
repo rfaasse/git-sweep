@@ -28,7 +28,7 @@ pub fn get_user_defined_branch_deletion_options(branch_data: &mut [BranchData]) 
                 toggle_branch_deletion_status_by_name(branch_data, name.as_str());
             }
         }
-        Ok(false) => println!("Deletion was aborted"),
+        Ok(false) => println!("Deletion was aborted."),
         Err(_) => {}
     }
 }
