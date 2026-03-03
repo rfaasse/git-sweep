@@ -10,19 +10,25 @@ pub fn get_user_defined_branch_deletion_options(branch_structure: &mut [BranchDa
         println!("No branches available for deletion.");
         return;
     }
-    let ans = MultiSelect::new("Select the branches you would like to delete:", options)
-        .prompt()
-        .unwrap();
+    let branch_names_scheduled_for_deletion =
+        MultiSelect::new("Select the branches you would like to delete:", options)
+            .prompt()
+            .unwrap_or(Vec::new());
+
+    if branch_names_scheduled_for_deletion.is_empty() {
+        println!("No branches selected for deletion.");
+        return;
+    }
 
     let confirm = Confirm::new("Do you want to continue?").prompt();
 
     match confirm {
         Ok(true) => {
-            for name in ans {
+            for name in branch_names_scheduled_for_deletion {
                 toggle_branch_deletion_status_by_name(branch_structure, name.as_str());
             }
         }
         Ok(false) => println!("Deletion was aborted"),
-        Err(_) => println!("Error, try again later"),
+        Err(_) => {}
     }
 }
