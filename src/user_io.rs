@@ -2,10 +2,14 @@ use crate::branch_data::BranchData;
 use crate::git_sweeper::toggle_branch_deletion_status_by_name;
 use inquire::{Confirm, MultiSelect};
 pub fn get_user_defined_branch_deletion_options(branch_structure: &mut [BranchData]) {
-    let options = branch_structure
+    let options: Vec<String> = branch_structure
         .iter()
         .map(|data| data.name.clone())
         .collect();
+    if options.is_empty() {
+        println!("No branches available for deletion.");
+        return;
+    }
     let ans = MultiSelect::new("Select the branches you would like to delete:", options)
         .prompt()
         .unwrap();
