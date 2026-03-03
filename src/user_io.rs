@@ -1,8 +1,8 @@
 use crate::branch_data::BranchData;
 use crate::git_sweeper::toggle_branch_deletion_status_by_name;
 use inquire::{Confirm, MultiSelect};
-pub fn get_user_defined_branch_deletion_options(branch_structure: &mut [BranchData]) {
-    let options: Vec<String> = branch_structure
+pub fn get_user_defined_branch_deletion_options(branch_data: &mut [BranchData]) {
+    let options: Vec<String> = branch_data
         .iter()
         .map(|data| data.name.clone())
         .collect();
@@ -25,7 +25,7 @@ pub fn get_user_defined_branch_deletion_options(branch_structure: &mut [BranchDa
     match confirm {
         Ok(true) => {
             for name in branch_names_scheduled_for_deletion {
-                toggle_branch_deletion_status_by_name(branch_structure, name.as_str());
+                toggle_branch_deletion_status_by_name(branch_data, name.as_str());
             }
         }
         Ok(false) => println!("Deletion was aborted"),
