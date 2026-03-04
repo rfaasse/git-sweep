@@ -2,10 +2,7 @@ use crate::branch_data::BranchData;
 use crate::git_sweeper::toggle_branch_deletion_status_by_name;
 use inquire::{Confirm, MultiSelect};
 pub fn get_user_defined_branch_deletion_options(branch_data: &mut [BranchData]) {
-    let options: Vec<String> = branch_data
-        .iter()
-        .map(|data| data.name.clone())
-        .collect();
+    let options: Vec<String> = branch_data.iter().map(|data| data.name.clone()).collect();
     if options.is_empty() {
         println!("No branches available for deletion.");
         return;
