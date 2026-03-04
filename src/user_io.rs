@@ -10,7 +10,7 @@ pub fn get_user_defined_branch_deletion_options(branch_data: &mut [BranchData]) 
     let branch_names_scheduled_for_deletion =
         MultiSelect::new("Select the branches you would like to delete:", options)
             .prompt()
-            .unwrap_or(Vec::new());
+            .unwrap_or_default();
 
     if branch_names_scheduled_for_deletion.is_empty() {
         println!("No branches selected for deletion.");
