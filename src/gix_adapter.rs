@@ -48,9 +48,6 @@ impl GixAdapter {
         head.referent_name().unwrap().to_string() == branch_refname
     }
 
-
-
-    
     fn branch_is_checked_out_by_worktree(&self, branch_name: &str) -> bool {
         self.repo
             .worktrees()
